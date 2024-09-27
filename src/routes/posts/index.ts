@@ -1,18 +1,25 @@
 import express, { Request, Response } from 'express';
+import { rateLimit } from 'express-rate-limit';
+
 import _ from 'lodash';
 
 import auth from '../../middleware/auth';
 import admin from '../../middleware/admin';
 import validateObjectId from '../../middleware/validateObjectId';
+import validateWith from '../../middleware/validateWith';
 
 import { createCompletion } from '../../utils/openai';
 import { Post } from '../../models/post';
 import { calculatePaginationData } from '../../utils/lib';
 import { postZodSchema } from '../../models/post/schema';
 
-import validateWith from '../../middleware/validateWith';
-
 const router = express.Router();
+
+const limiter = rateLimit({
+    windowMs: 15 * 50 * 1000,
+    limit: 5,
+    message: 'Too many AI requests. Please try again after 15 minutes'
+})
 
 router.post('/approve/:id', [auth, admin, validateObjectId], async (req: Request, res: Response): Promise<any> => { 
     const post = await Post.findById(req.params.id);
@@ -33,7 +40,7 @@ router.post('/approve/:id', [auth, admin, validateObjectId], async (req: Request
     res.json(_.pick(post, ['status', '_id']));
 });
 
-router.post('/', [auth, validateWith(postZodSchema as any)], async (req: Request, res: Response): Promise<any> => {
+router.post('/', [auth, limiter, validateWith(postZodSchema as any)], async (req: Request, res: Response): Promise<any> => {
     let content = req.body.content;
     
     if (req.body.useAI) {
@@ -76,6 +83,47 @@ router.get('/me', auth, async (req: Request, res: Response) => {
                         .limit(pagination.limit)
 
     res.send({ posts, pagination });
+});
+
+router.get('/:id/metrics', [auth, validateObjectId], async (req: Request, res: Response) => {
+    const result = await Post.aggregate([
+        {
+            $addFields: {
+                date: {"$toDate": "$_id"}
+            },
+        },
+        {
+            $group: {
+                _id: '$user',
+                totalPosts: { $sum: 1 },
+                totalLikes: { $sum: '$likes' },
+                totalViews: { $sum: '$views' },
+                totalShares: { $sum: '$shares' },
+                averageLikes: { $avg: '$likes' },
+                averageViews: { $avg: '$views' },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                totalViews: 1,
+                totalLikes: 1,
+                totalPosts: 1,
+                totalShares: 1,
+                roundedAverageLikes: { $round: ['$averageLikes', 0 ]},
+                roundedAverageViews: { $round: ['$averageViews', 0 ]},
+                engagementRate: {
+                    $cond: { 
+                      if: { $gt: ['$totalViews', 0] },
+                      then: { $round: [{ $divide: [{ $add: ['$totalLikes', '$totalShares'] }, '$totalViews']}, 1]},
+                      else: 0 
+                    }
+                }
+            }
+        }
+    ]);
+
+    res.json({ overview: result[0] });
 });
 
 export default router;

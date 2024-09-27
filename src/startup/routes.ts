@@ -5,6 +5,7 @@ import express, { Express } from "express";
 
 import auth from '../routes/auth';
 import posts from '../routes/posts';
+import metrics from '../routes/metrics';
 
 import error from "../middleware/error";
 
@@ -17,6 +18,7 @@ function registerRoutes(app: Express) {
 
     app.use('/api/v1/auth', auth);
     app.use('/api/v1/posts', posts);
+    app.use('/api/v1/metrics', metrics);
     
     app.use(error);
 }
