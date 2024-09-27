@@ -35,7 +35,7 @@ router.post('/register', validateWith(userZodSchema), async (req: Request, res: 
     res
     .header('x-auth-token', user.generateAuthToken())
     .header('access-control-expose-headers', 'x-auth-token')
-    .status(201).send( _.omit(user, ['password']));
+    .status(201).send(_.omit(user, ['password']));
 });
 
 export default router;
