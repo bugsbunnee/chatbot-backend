@@ -38,8 +38,9 @@ router.post('/', [auth, validateWith(postZodSchema as any)], async (req: Request
     const post = new Post({
         content,
         platform: req.body.platform,
-        user: req.user?._id,
+        media: req.body.media,
         scheduleTime: req.body.scheduleTime,
+        user: req.user?._id,
         status: 'pending'
     });
 

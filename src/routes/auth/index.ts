@@ -2,10 +2,11 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
+import validateWith from '../../middleware/validateWith';
+
 import { authSchema } from './schema';
 import { User } from '../../models/user';
 import { userZodSchema } from '../../models/user/schema';
-import validateWith from '../../middleware/validateWith';
 
 const router = express.Router();
 

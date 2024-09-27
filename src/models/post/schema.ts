@@ -21,6 +21,7 @@ export interface IPost {
 export const postZodSchema = z.object({
         platform: z.enum(platforms as any),
         content: z.string(),
+        media: z.string().url(),
         user: z.string().refine((userId) => mongoose.Types.ObjectId.isValid(userId)),
         useAI: z.boolean().default(false).optional(),
         scheduleTime: z.date().min(moment().toDate())

@@ -1,10 +1,10 @@
 import winston from "winston";
-import 'express-async-errors'
 
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(winston.format.colorize(), winston.format.json()),
     defaultMeta: { service: 'user-service' },
+    handleExceptions: true,
     transports: [
         new winston.transports.File({ filename: 'error.log', level: 'error' }),
         new winston.transports.File({ filename: 'combined.log' }),
