@@ -13,6 +13,6 @@ registerDB();
 registerRoutes(app);
 
 const port = process.env.PORT || 4000;
-const server = app.listen(port, () => logger.info(`Listening on port: ${port}`));
+app.listen(port, () => logger.info(`Listening on port: ${port}`));
 
-export default server;
+export default app;
