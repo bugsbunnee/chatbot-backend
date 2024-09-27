@@ -16,7 +16,7 @@ function registerRoutes(app: Express) {
     app.use(express.urlencoded({ extended: true }));
 
     app.use('/api/v1/auth', auth);
-    app.use('/api/vi/posts', posts);
+    app.use('/api/v1/posts', posts);
     
     app.use(error);
 }
