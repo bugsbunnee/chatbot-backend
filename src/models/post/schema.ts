@@ -24,7 +24,7 @@ export const postZodSchema = z.object({
         media: z.string().url(),
         user: z.string().refine((userId) => mongoose.Types.ObjectId.isValid(userId)),
         useAI: z.boolean().default(false).optional(),
-        scheduleTime: z.date().min(moment().toDate())
+        scheduleTime: z.string().datetime().refine((value) => moment(value).isAfter(moment()))
     }).refine((data) => data.content.length > PLATFORM_LIMITS[data.platform as keyof typeof PLATFORM_LIMITS].charLimit, {
         message: 'Post content is too long!',
         path: ['content'],
