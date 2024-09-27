@@ -1,20 +1,14 @@
-import { Post } from '../models/post';
-import { IPost } from '../models/post/schema';
-
-import Queue from 'bull';
 import moment from 'moment';
+import cron from 'node-cron';
 
-const postQueue = new Queue('postQueue');
+import { Post } from '../models/post';
 
-postQueue.process(async (job) => {
-    const post = await Post.findById(job.data.postId);
-    if (!post) return;
+export const publishPendingPostsJob = async () => {
+    cron.schedule('* * * * *', async () => {
+        const results = await Post.updateMany({ status: 'approved', scheduleTime: { $gte: moment().format() } }, { 
+            $set: { status: 'published' },
+        });
 
-    post.status = 'published';
-    await post.save();
-});
-
-export const schedulePost = async (post: IPost ) => {
-    const delay = moment(post.scheduleTime).diff(moment(), 'millisecond');
-    await postQueue.add({ postId: post._id }, { delay });
+        console.log(results);
+    });
 };
