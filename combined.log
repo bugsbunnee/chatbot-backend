@@ -238,3 +238,50 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
 {"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
 {"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"FieldPath field names may not start with '$'. Consider using $getField or $setField.","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"validator.isValid is not a function","service":"user-service"}
+{"level":"\u001b[31merror\u001b[39m","message":"validator.isValid is not a function","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}

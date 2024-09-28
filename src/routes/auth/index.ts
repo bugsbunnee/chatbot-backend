@@ -15,7 +15,7 @@ router.post('/login', validateWith(authSchema), async (req: Request, res: Respon
     if (!user) return res.status(400).send({ message: 'User not found' });
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(400).send({ message: 'Invalid password' });
+    if (!validPassword) return res.status(400).send({ message: 'Invalid credentials!' });
 
     const token = user.generateAuthToken();
     res.send({ token });

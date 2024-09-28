@@ -1,5 +1,4 @@
 import { Request } from "express";
-import { Model } from "mongoose";
 
 export const calculatePaginationData = async (req: Request, total: number) => {
     const query = {
@@ -19,3 +18,18 @@ export const calculatePaginationData = async (req: Request, total: number) => {
     };
 };
 
+export const getUserQueryData = (req: Request) => {
+    const queryData: Record<string, any> = { 
+        user: req.user?._id, 
+    };
+    
+    if (req.query.searchText) {
+        queryData.content = { $regex: req.query.searchText, $options: 'i' };
+    }
+
+    if (req.query.platform) {
+        queryData.platform = req.query.platform;
+    }
+
+    return queryData;
+}

@@ -10,7 +10,7 @@ import validateWith from '../../middleware/validateWith';
 
 import { createCompletion } from '../../utils/openai';
 import { Post } from '../../models/post';
-import { calculatePaginationData } from '../../utils/lib';
+import { calculatePaginationData, getUserQueryData } from '../../utils/lib';
 import { postZodSchema } from '../../models/post/schema';
 
 const router = express.Router();
@@ -73,25 +73,20 @@ router.get('/', [auth, admin], async (req: Request, res: Response) => {
 });
 
 router.get('/me', auth, async (req: Request, res: Response) => {
-    const userData = { user: req.user?._id };
+    const userData = getUserQueryData(req);
 
     const totalPosts = await Post.find(userData).countDocuments();
     const pagination = await calculatePaginationData(req, totalPosts);
 
     const posts = await Post.find(userData)
                         .skip(pagination.offset)
-                        .limit(pagination.limit)
+                        .limit(pagination.limit);
 
     res.send({ posts, pagination });
 });
 
-router.get('/:id/metrics', [auth, validateObjectId], async (req: Request, res: Response) => {
+router.get('/me/metrics', [auth], async (req: Request, res: Response) => {
     const result = await Post.aggregate([
-        {
-            $addFields: {
-                date: {"$toDate": "$_id"}
-            },
-        },
         {
             $group: {
                 _id: '$user',

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { IUser, IUserMethods, IUserVirtuals } from "./schema";
 import { app_roles } from "../../utils/constants";
+import _ from "lodash";
 
 type UserModel = mongoose.Model<IUser, {}, IUserMethods, IUserVirtuals>;
 
@@ -15,7 +16,15 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods, IUserVirt
 });
 
 UserSchema.method('generateAuthToken', function () {
-    const token = jwt.sign({ _id: this._id, role: this.role }, process.env.JWT_SECRET as string);
+    const user = {
+        _id: this._id,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        role: this.role,
+    };
+
+    const token = jwt.sign(user, process.env.JWT_SECRET as string);
     return token;
 });
 

@@ -16,4 +16,6 @@ const PostSchema = new mongoose.Schema<IPost>({
     approver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
+PostSchema.index({ content: 'text' });
+
 export const Post = mongoose.model('Post', PostSchema);
