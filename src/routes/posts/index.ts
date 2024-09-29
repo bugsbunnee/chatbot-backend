@@ -12,6 +12,8 @@ import { createCompletion } from '../../utils/openai';
 import { Post } from '../../models/post';
 import { calculatePaginationData, getUserQueryData } from '../../utils/lib';
 import { postZodSchema } from '../../models/post/schema';
+import mongoose from 'mongoose';
+import { AuthUser, IUser } from '@/models/user/schema';
 
 const router = express.Router();
 
@@ -85,8 +87,11 @@ router.get('/me', auth, async (req: Request, res: Response) => {
     res.send({ posts, pagination });
 });
 
-router.get('/me/metrics', [auth], async (req: Request, res: Response) => {
+router.get('/me/metrics', [auth], async (req: Request, res: Response): Promise<any> => {
     const result = await Post.aggregate([
+        {
+            $match: { user: new mongoose.Types.ObjectId((req.user as unknown as AuthUser)._id) } // Filter by userId
+        },
         {
             $group: {
                 _id: '$user',
@@ -118,7 +123,19 @@ router.get('/me/metrics', [auth], async (req: Request, res: Response) => {
         }
     ]);
 
-    res.json({ overview: result[0] });
+    if (result.length > 0) return res.json({ overview: result[0] });
+
+    res.json({ 
+        overview: {
+            totalViews: 0,
+            totalLikes: 0,
+            totalPosts: 0,
+            totalShares: 0,
+            roundedAverageLikes: 0,
+            roundedAverageViews: 0,
+            engagementRate: 0
+        } 
+    });
 });
 
 export default router;
