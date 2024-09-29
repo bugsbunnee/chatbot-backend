@@ -23,7 +23,7 @@ const limiter = rateLimit({
     message: 'Too many AI requests. Please try again after 15 minutes'
 })
 
-router.post('/approve/:id', [auth, admin, validateObjectId], async (req: Request, res: Response): Promise<any> => { 
+router.post('/:id/approve', [auth, admin, validateObjectId], async (req: Request, res: Response): Promise<any> => { 
     const post = await Post.findById(req.params.id);
     
     if (!post) {
