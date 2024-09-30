@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import _ from 'lodash';
+import pdfParse from 'pdf-parse';
 
 import admin from '../../middleware/admin';
 import auth from '../../middleware/auth';
@@ -14,11 +15,12 @@ import { generateResponseToDocumentQuestion } from '../../utils/openai';
 const router = express.Router();
 
 router.post('/', [auth, admin, validateWith(documentSchema)], async (req: Request, res: Response): Promise<any> => {
-    const response = await axios.get(req.body.url, { responseType: 'text' });
+    const response = await axios.get(req.body.url, { responseType:'arraybuffer'});
+    const data = await pdfParse(response.data);
 
     const document = new Document({
         fileName: req.body.fileName,
-        content: response.data,
+        content: data.text,
         enquiries: []
     });
 
