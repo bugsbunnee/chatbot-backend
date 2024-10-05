@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import 'express-async-errors';
+import 'module-alias/register';
 
 import logger from './startup/logger';
 import registerConfig from './startup/config';

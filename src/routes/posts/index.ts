@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { rateLimit } from 'express-rate-limit';
 
 import _ from 'lodash';
+import mongoose from 'mongoose';
 
 import auth from '../../middleware/auth';
 import admin from '../../middleware/admin';
@@ -12,7 +13,6 @@ import { createCompletion } from '../../utils/openai';
 import { Post } from '../../models/post';
 import { calculatePaginationData, getUserQueryData } from '../../utils/lib';
 import { postZodSchema } from '../../models/post/schema';
-import mongoose from 'mongoose';
 import { AuthUser, IUser } from '@/models/user/schema';
 
 const router = express.Router();

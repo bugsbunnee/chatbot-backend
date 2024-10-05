@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
-import { IDocument, IDocumentEnquiry } from "./schema";
+import { IDocument, IDocumentHistory, IDocumentMethods } from "./schema";
 
-const enquirySchema = new mongoose.Schema<IDocumentEnquiry>({
-    question: { type: String, required: true, trim: true, minlength: 5 },
-    response: { type: String }
-});
+type DocumentModel = mongoose.Model<IDocument, {}, IDocumentMethods>;
 
-const documentSchema = new mongoose.Schema<IDocument>({
-    fileName: { type: String, required: true, trim: true },
+const HistorySchema = new mongoose.Schema<IDocumentHistory>({
+    version: { type: Number, min: 1, required: true }, 
     content: { type: String, required: true },
-    enquiries: [enquirySchema]
+    url: { type: String }
 });
 
-export const Document = mongoose.model('Document', documentSchema);
+const DocumentSchema = new mongoose.Schema<IDocument, DocumentModel, IDocumentMethods>({
+    lastInsertedVersion: { type: Number, min: 1, required: true },
+    name: { type: String, required: true, trim: true },
+    documentNumber: { type: String, unique: true, required: true },
+    history: [HistorySchema],
+    tags: [String],
+}, {
+    timestamps: true
+});
+
+DocumentSchema.methods.readLastTextContent = function () {
+    const latestHistory = this.history.find((item) => item.version === this.lastInsertedVersion);
+    return latestHistory ? latestHistory.content : '';
+};
+
+export const Document = mongoose.model('Document', DocumentSchema);

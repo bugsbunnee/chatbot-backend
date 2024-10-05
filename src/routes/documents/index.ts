@@ -8,20 +8,23 @@ import auth from '../../middleware/auth';
 import validateWith from '../../middleware/validateWith';
 import validateObjectId from '../../middleware/validateObjectId';
 
-import { documentQuestionSchema, documentSchema } from './schema';
+import { newDocumentSchema, updateDocumentSchema } from './schema';
 import { Document } from '../../models/document';
-import { generateResponseToDocumentQuestion } from '../../utils/openai';
 
 const router = express.Router();
 
-router.post('/', [auth, admin, validateWith(documentSchema)], async (req: Request, res: Response): Promise<any> => {
+router.post('/upload', [auth, admin, validateWith(newDocumentSchema)], async (req: Request, res: Response): Promise<any> => {
     const response = await axios.get(req.body.url, { responseType:'arraybuffer'});
     const data = await pdfParse(response.data);
 
+    const versionNumber = 1;
     const document = new Document({
-        fileName: req.body.fileName,
-        content: data.text,
-        enquiries: []
+        name: req.body.name,
+        tags: req.body.tags,
+        documentNumber: req.body.documentNumber,
+        lastInsertedVersion: versionNumber,
+        history: { content: data.text, version: versionNumber, url: req.body.url },
+        enquiries: [],
     });
 
     await document.save();
@@ -29,34 +32,59 @@ router.post('/', [auth, admin, validateWith(documentSchema)], async (req: Reques
     res.status(201).json(document);
 });
 
-router.post('/:id/enquire', [auth, validateObjectId, validateWith(documentQuestionSchema)], async (req: Request, res: Response): Promise<any> => {
-    const document = await Document.findById(req.params.id);
-    if (!document) return res.status(400).json({ message: 'Invalid document ID provided!' });
+router.get('/dashboard', [auth, admin], async (req: Request, res: Response) => {
+    const totalDocumentsPromise = Document.countDocuments();
 
-    const response = await generateResponseToDocumentQuestion(document.content, req.body.question);
-    if (!response) return res.status(404).json({ message: 'Could not find an answer to your question!' });
-    
-    const newEnquiry = {
-        question: req.body.question,
-        response,
-    };
-    
-    document.enquiries.push(newEnquiry);
+    const topTagsPromise = Document.aggregate([
+        { $unwind: "$tags" },
+        { $group: { _id: "$tags", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 } // Top 5 tags
+    ]);
+
+    const [totalDocuments, topTags] = await Promise.all([totalDocumentsPromise, topTagsPromise]);
+ 
+    res.json({
+        totalDocuments,
+        topTags
+    });
+});
+
+router.put('/:id', [auth, admin, validateObjectId, validateWith(updateDocumentSchema)], async (req: Request, res: Response): Promise<any> => {
+    const response = await axios.get(req.body.url, { responseType:'arraybuffer'});
+    const data = await pdfParse(response.data);
+
+    const document = await Document.findByIdAndUpdate(req.params.id);
+    if (!document) return res.status(404).json({ message: 'The document with the given ID does not exist' });
+
+    document.lastInsertedVersion += 1;
+    document.history.push({ version: document.lastInsertedVersion, content: data.text, url: req.body.url });
     await document.save();
 
-    res.json(newEnquiry);    
+    res.json(document);
 });
 
-router.get('/:id', [auth, validateObjectId], async (req: Request, res: Response): Promise<any> => {
+router.get('/:id', [auth, admin, validateObjectId], async (req: Request, res: Response): Promise<any> => {
     const document = await Document.findById(req.params.id);
-    if (!document) return res.status(400).json({ message: 'Invalid document ID provided!' });
-
-    res.json(_.pick(document, ['_id', 'fileName', 'content', 'enquiries']));
+    if (!document) return res.status(404).json({ message: 'The document with the given ID does not exist' });
+    
+    res.json(document);
 });
 
-router.get('/', [auth], async (req: Request, res: Response): Promise<any> => {
-    const documents = await Document.find().select('_id fileName')
+router.get('/', [auth, admin], async (req: Request, res: Response): Promise<any> => {
+    const documents = await Document
+                                .find()
+                                .select('_id name createdAt tags documentNumber lastInsertedVersion')
+                                .sort({ createdAt: 1 });
+
     res.json(documents);
+});
+
+router.delete('/:id', [auth, admin, validateObjectId], async (req: Request, res: Response): Promise<any> => {
+    const document = await Document.findByIdAndDelete(req.params.id);
+    if (!document) return res.status(404).json({ message: 'The document with the given ID does not exist' });
+    
+    res.json(_.pick(document, ['_id']));
 });
 
 export default router;

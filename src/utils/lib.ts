@@ -1,3 +1,4 @@
+import { Document } from "@/models/document";
 import { Request } from "express";
 
 export const calculatePaginationData = async (req: Request, total: number) => {
@@ -32,4 +33,14 @@ export const getUserQueryData = (req: Request) => {
     }
 
     return queryData;
-}
+};
+
+export const readAllDocumentContent = async () => {
+    let content = '';
+
+    for await (const document of Document.find().cursor()) {
+        content += document.readLastTextContent();
+    }
+
+    return content;
+};
