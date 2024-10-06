@@ -1,4 +1,4 @@
-import { Document } from "@/models/document";
+import { Document } from "../models/document";
 import { Request } from "express";
 
 export const calculatePaginationData = async (req: Request, total: number) => {

@@ -2,14 +2,14 @@ import express, { Request, Response } from 'express';
 import _ from 'lodash';
 
 import { Options, rateLimit } from 'express-rate-limit';
-import { getChatMessageList, getLastChatMetadata, sendChatMessage, startConversation } from '@/utils/openai';
+import { getChatMessageList, getLastChatMetadata, sendChatMessage, startConversation } from '../../utils/openai';
 
-import { Chat } from '@/models/chat';
-import { messageZodSchema } from '@/models/chat/schema';
+import { Chat } from '../../models/chat';
+import { messageZodSchema } from '../../models/chat/schema';
 
-import auth from '@/middleware/auth';
-import validateWith from '@/middleware/validateWith';
-import initializeChat from '@/middleware/initializeChat';
+import auth from '../../middleware/auth';
+import validateWith from '../../middleware/validateWith';
+import initializeChat from '../../middleware/initializeChat';
 
 const router = express.Router();
 const limitOptions: Partial<Options> = { windowMs: 15 * 60 * 1000, limit: 5, message: 'Too many requests, please try again later'};

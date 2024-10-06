@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
-import validateWith from '@/middleware/validateWith';
+import validateWith from '../../middleware/validateWith';
 
-import { Feedback } from '@/models/feedback';
-import { feedbackZodSchema } from '@/models/feedback/schema';
+import { Feedback } from '../../models/feedback';
+import { feedbackZodSchema } from '../../models/feedback/schema';
 
 const router = express.Router();
 

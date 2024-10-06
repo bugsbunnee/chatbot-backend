@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
 
+import _ from "lodash";
+
 import { IUser, IUserMethods, IUserVirtuals } from "./schema";
 import { app_roles } from "../../utils/constants";
-import _ from "lodash";
 
 type UserModel = mongoose.Model<IUser, {}, IUserMethods, IUserVirtuals>;
 

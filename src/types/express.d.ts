@@ -1,5 +1,5 @@
-import { IChat } from "@/models/chat";
-import { AuthUser } from "@/models/user/schema";
+import { IChat } from "../models/chat";
+import { AuthUser } from "../models/user/schema";
 
 declare global {
     namespace Express {

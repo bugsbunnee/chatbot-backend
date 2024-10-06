@@ -1,4 +1,4 @@
-import { AuthUser } from "@/models/user/schema";
+import { AuthUser } from "../models/user/schema";
 import { NextFunction, Request, Response } from "express";
 
 import jwt from 'jsonwebtoken';

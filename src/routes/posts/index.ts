@@ -13,7 +13,7 @@ import { createCompletion } from '../../utils/openai';
 import { Post } from '../../models/post';
 import { calculatePaginationData, getUserQueryData } from '../../utils/lib';
 import { postZodSchema } from '../../models/post/schema';
-import { AuthUser, IUser } from '@/models/user/schema';
+import { AuthUser, IUser } from '../../models/user/schema';
 
 const router = express.Router();
 

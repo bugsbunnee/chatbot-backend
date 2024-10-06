@@ -3,14 +3,14 @@ import helmet from "helmet";
 import compression from 'compression';
 import express, { Express } from "express";
 
-import auth from '@/routes/auth';
-import chat from '@/routes/chat';
-import documents from '@/routes/documents';
-import feedback from '@/routes/feedback';
-import posts from '@/routes/posts';
-import metrics from '@/routes/metrics';
+import auth from '../routes/auth';
+import chat from '../routes/chat';
+import documents from '../routes/documents';
+import feedback from '../routes/feedback';
+import posts from '../routes/posts';
+import metrics from '../routes/metrics';
 
-import error from "@/middleware/error";
+import error from "../middleware/error";
 
 function registerRoutes(app: Express) {
     app.use(cors());

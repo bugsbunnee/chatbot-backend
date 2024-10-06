@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { NextFunction, Request, Response } from "express";
 
-import { Chat } from "@/models/chat";
-import { startConversation } from "@/utils/openai";
+import { Chat } from "../models/chat";
+import { startConversation } from "../utils/openai";
 
 async function initializeChat(req: Request, res: Response, next: NextFunction) {
     let chat = await Chat.findOne({ userId: req.user?._id });
