@@ -13,7 +13,7 @@ import metrics from '@/routes/metrics';
 import error from "@/middleware/error";
 
 function registerRoutes(app: Express) {
-    app.use(cors());
+    // app.use(cors());
     app.use(compression());
     app.use(helmet());
     app.use(express.json());
