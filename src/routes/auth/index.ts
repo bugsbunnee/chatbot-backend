@@ -4,15 +4,22 @@ import _ from 'lodash';
 
 import validateWith from '../../middleware/validateWith';
 
-import { authSchema } from './schema';
+import { authSchema, emailSchema } from './schema';
 import { User } from '../../models/user';
 import { userZodSchema } from '../../models/user/schema';
 
 const router = express.Router();
 
+router.post('/initialize', validateWith(emailSchema), async (req: Request, res: Response): Promise<any> => {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) return res.status(400).json({ isValid: false, message: 'User already exists', isError: false });
+
+    res.json({ isValid: true, message: 'User not found', isError: false });
+});
+
 router.post('/login', validateWith(authSchema), async (req: Request, res: Response): Promise<any> => {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send({ message: 'User not found' });
+    if (!user) return res.status(404).send({ message: 'User not found' });
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send({ message: 'Invalid credentials!' });

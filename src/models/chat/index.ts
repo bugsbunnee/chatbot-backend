@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-interface IChat {
+export interface IChat {
+    _id: string;
     userId: mongoose.Types.ObjectId;
     assistantId: string;
     threadId: string;
