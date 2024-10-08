@@ -36,7 +36,7 @@ router.post('/ask', [auth, validateWith(messageZodSchema), initializeChat], asyn
 });
 
 router.get('/', [auth, initializeChat], async (req: Request, res: Response): Promise<any> => {
-    if (!req.chat) return res.status(404).json({ message: 'No chat found for the given user!' });
+    if (!req.chat || !req.chat.runId) return res.status(404).json({ message: 'No chat found for the given user!' });
 
     const response = await getChatMessageList(_.pick(req.chat, ['threadId', 'runId']));
 

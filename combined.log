@@ -548,3 +548,7 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
 {"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
 {"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Listening on port: 8000","service":"user-service"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Connected to DB: mongodb://localhost:27017/social-post-scheduler","service":"user-service"}
