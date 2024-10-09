@@ -1,3 +1,5 @@
+export const MAX_CONTENT_LENGTH = 236000;
+
 export const ROLES = {
     ADMIN: 'admin',
     EDITOR: 'editor'

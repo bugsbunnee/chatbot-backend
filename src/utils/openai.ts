@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import _ from 'lodash';
 import logger from '../startup/logger';
 import { readAllDocumentContent } from './lib';
+import { MAX_CONTENT_LENGTH } from './constants';
 
 interface ConversationData { 
     assistantId: string; 
@@ -107,7 +108,7 @@ export const sendChatMessage = async (conversation: ConversationData): Promise<M
     
         const run = await client.beta.threads.runs.create(conversation.threadId, {
             assistant_id: conversation.assistantId,
-            instructions: generatePrompt(allDocumentContent, conversation.message),
+            instructions: generatePrompt(allDocumentContent.substring(0, MAX_CONTENT_LENGTH), conversation.message),
         });
     
         return { messageId: message.id, runId: run.id };
