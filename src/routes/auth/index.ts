@@ -6,15 +6,15 @@ import validateWith from '../../middleware/validateWith';
 
 import { authSchema, emailSchema } from './schema';
 import { User } from '../../models/user';
-import { userZodSchema } from '../../models/user/schema';
+import { userJoiSchema } from '../../models/user/schema';
 
 const router = express.Router();
 
 router.post('/initialize', validateWith(emailSchema), async (req: Request, res: Response): Promise<any> => {
     const user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).json({ isValid: false, message: 'User already exists', isError: false });
+    if (user) return res.status(400).json({ isExisting: true, message: 'User already exists' });
 
-    res.json({ isValid: true, message: 'User not found', isError: false });
+    res.json({ isExisting: false, message: 'User not found' });
 });
 
 router.post('/login', validateWith(authSchema), async (req: Request, res: Response): Promise<any> => {
@@ -28,7 +28,7 @@ router.post('/login', validateWith(authSchema), async (req: Request, res: Respon
     res.send({ token });
 });
 
-router.post('/register', validateWith(userZodSchema), async (req: Request, res: Response): Promise<any> => {
+router.post('/register', validateWith(userJoiSchema), async (req: Request, res: Response): Promise<any> => {
     let user = await User.findOne({ email: req.body.email });
     if (user) return res.status(400).send({ message: 'User already exists' });
 

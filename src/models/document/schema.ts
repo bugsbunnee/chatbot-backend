@@ -1,10 +1,11 @@
 export interface IDocumentHistory { 
+    type: 'pdf';
     version: number; 
-    content: string;
     url: string;
 }
 
 export interface IDocument {
+    isAnalyzed: boolean;
     createdAt: Date;
     updatedAt: Date;
     lastInsertedVersion: number;
@@ -15,5 +16,5 @@ export interface IDocument {
 }
 
 export interface IDocumentMethods {
-    readLastTextContent: () => string;
+    getLastEntry: () => IDocumentHistory | undefined;
 }

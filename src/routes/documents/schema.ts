@@ -1,22 +1,27 @@
 
-import { z } from 'zod';
+import Joi from 'joi';
 
-export const newDocumentSchema = z.object({
-    url: z.string().url(),
-    type: z.literal('pdf'),
-    documentNumber: z.string().min(3, 'Document number must be at least 3 characters'),
-    name: z.string().min(3, 'File name must be at least 3 characters'),
-    tags: z.array(z.string().min(1)).min(1)
+export const newDocumentSchema = Joi.object({
+    url: Joi.string().uri(),
+    type: Joi.string().valid('pdf'),
+    documentNumber: Joi.string().min(3).required(),
+    name: Joi.string().min(3),
+    tags: Joi.array().items(Joi.string().min(1)).min(1).required()
 });
 
-export const updateDocumentSchema = z.object({
-    url: z.string().url(),
+export const updateDocumentSchema = Joi.object({
+    url: Joi.string().uri(),
+    type: Joi.string().valid('pdf'),
 });
 
-export const documentQuestionSchema = z.object({
-    question: z.string().min(5, 'Question must be at least 5 characters'),
+export const documentQuestionSchema = Joi.object({
+    question: Joi.string().min(5).required().label('Question'),
 })
 
-export type NewDocumentData = z.infer<typeof newDocumentSchema>;
-
-
+export interface NewDocumentData {
+    url: string;
+    type: string;
+    documentNumber: string;
+    name: string;
+    tags: string;
+}

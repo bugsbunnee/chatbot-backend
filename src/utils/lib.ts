@@ -1,5 +1,6 @@
-import { Document } from "../models/document";
+import Joi from "joi";
 import { Request } from "express";
+
 
 export const calculatePaginationData = async (req: Request, total: number) => {
     const query = {
@@ -35,12 +36,10 @@ export const getUserQueryData = (req: Request) => {
     return queryData;
 };
 
-export const readAllDocumentContent = async () => {
-    let content = '';
+export const validateEmailDomain = (value: string, helpers: Joi.CustomHelpers<any>) => {
+    const [name, domain] = value.split('@');
 
-    for await (const document of Document.find().cursor()) {
-        content += document.readLastTextContent();
-    }
+    if (domain.toLowerCase().indexOf('russelsmithgroup.com') !== -1) return value;
 
-    return content;
+    return helpers.message({ custom: 'Email must be of russelsmith domain!' })
 };

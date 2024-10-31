@@ -39,6 +39,7 @@
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^7.4.0",
     "helmet": "^7.1.0",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.3",
@@ -48,8 +49,8 @@
     "nodemailer": "^6.9.15",
     "openai": "^4.64.0",
     "pdf-parse": "^1.1.1",
+    "tiktoken": "^1.0.17",
     "ts-node": "^10.9.2",
-    "winston": "^3.14.2",
-    "zod": "^3.23.8"
+    "winston": "^3.14.2"
   }
 }

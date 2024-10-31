@@ -6,13 +6,15 @@ export interface IChat {
     assistantId: string;
     threadId: string;
     runId: string;
+    vectorId: string | null;
 }
 
 const chatSchema = new mongoose.Schema<IChat>({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     assistantId: { type: String, required: true },
     threadId: { type: String, required: true },
-    runId: { type: String }
+    runId: { type: String },
+    vectorId: { type: String }
 }, { timestamps: true });
 
 export const Chat = mongoose.model<IChat>('Chat', chatSchema);

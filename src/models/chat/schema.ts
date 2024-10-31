@@ -1,7 +1,9 @@
-import { z } from "zod";
+import Joi from 'joi';
 
-export const messageZodSchema = z.object({
-    message: z.string().min(10, 'Message must be at least 10 characters')
+export const messageJoiSchema = Joi.object({
+    message: Joi.string().min(2).required().label("Message")
 });
 
-export type MessageData = z.infer<typeof messageZodSchema>;
+export interface IMessage {
+    message: string;
+}

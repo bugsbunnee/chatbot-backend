@@ -1,10 +1,12 @@
 import OpenAI from 'openai';
 import _ from 'lodash';
 import logger from '../startup/logger';
-import { readAllDocumentContent } from './lib';
-import { MAX_CONTENT_LENGTH } from './constants';
+import fs from 'fs';
+
+import { Uploadable } from 'openai/uploads';
 
 interface ConversationData { 
+    vectorId: string | null;
     assistantId: string; 
     threadId: string;
     message: string; 
@@ -24,67 +26,19 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const createCompletion = async (platform: string, content: string) => {
-    try {
-        const response = await client.chat.completions.create({
-            model: process.env.OPEN_AI_MODEL as string,
-            messages: [{ role: 'user', content: `Write a social media post for ${platform} about: ${content}`}],
-            temperature: 0.2,
-            max_completion_tokens: 100
-        });
-
-        return response.choices[0].message.content;
-    } catch (error) {
-        logger.error(error);
-        
-        return content;
-    }
-}
-
-export const generatePrompt = (content: string, question: string) => {
+export const generatePrompt = () => {
     return `
-        As a director in RusselSmith Group Nigeria, we have an employee guide and
-        we are seeking to educate our employees on the guide.
-
-        Here's the content in our employee handbook:
-        
-        ${content}
-
-        -----
-
-        Instructions for Task Completion:
-        
-        Analyse the content from the specified text in the handbook above and respond to
-        any clarifications the user may ask.
-
-        With the provided instructions above, respond to this question: ${question}
+        Analyse the content in the files and provide a suitable answer
     `;
 };
 
-export const generateResponseToDocumentQuestion = async (content: string, question: string) => {
-    try {
-        const completion = await client.chat.completions.create({
-            model: process.env.OPEN_AI_MODEL as string,
-            messages: [
-                { role: 'system', content: 'You are the Human Resource manager at RusselSmith Group Nigeria, willing to educate employees about company policy' },
-                { role: 'user', content: generatePrompt(content, question) }
-            ],
-            temperature: 0.2,
-            max_completion_tokens: 500,
-        });
-
-        return completion.choices[0].message.content;
-    } catch (error) {
-        return '';
-    }
-};
-
-export const startConversation = async (): Promise<Omit<ConversationData, 'message'> | null> => {
+export const startConversation = async (): Promise<Omit<ConversationData, 'message' | 'vectorId'> | null> => {
     try {
         const assistant = await client.beta.assistants.create({ 
             name: 'RusselSmith Chat Assistant',
             instructions: 'You\'re RusselSmiths ChatBot called Dan, respond politely and be as informative as possible',
             model: process.env.OPEN_AI_MODEL as string,
+            tools: [{ type: "file_search" }]
         });
     
         const thread = await client.beta.threads.create();
@@ -97,9 +51,36 @@ export const startConversation = async (): Promise<Omit<ConversationData, 'messa
     }
 };
 
+export const uploadFilesAndPoll = async (vectorName: string, fileStreams: Uploadable[]) => {
+    let vectorStore = await client.beta.vectorStores.create({
+        name: vectorName,
+    });
+
+    try {
+        await client.beta.vectorStores.fileBatches.uploadAndPoll(vectorStore.id, { files: fileStreams });
+        console.log('completed')
+    } catch (error) {
+        logger.error(error);
+    }
+
+    return vectorStore.id;
+};
+
+export const deleteFiles = async () => {
+    const response = await client.files.list();
+
+    for (const file of response.data) {
+        await client.files.del(file.id);
+    }
+};
+
 export const sendChatMessage = async (conversation: ConversationData): Promise<MessageData | null> => {
     try {
-        const allDocumentContent = await readAllDocumentContent();
+        if (conversation.vectorId) {
+            await client.beta.assistants.update(conversation.assistantId, {
+                tool_resources: { file_search: { vector_store_ids: [conversation.vectorId] } },
+            });
+        }
 
         const message = await client.beta.threads.messages.create(conversation.threadId, {
             role: 'user',
@@ -108,7 +89,7 @@ export const sendChatMessage = async (conversation: ConversationData): Promise<M
     
         const run = await client.beta.threads.runs.create(conversation.threadId, {
             assistant_id: conversation.assistantId,
-            instructions: generatePrompt(allDocumentContent.substring(0, MAX_CONTENT_LENGTH), conversation.message),
+            instructions: generatePrompt(),
         });
     
         return { messageId: message.id, runId: run.id };

@@ -1,17 +1,18 @@
+import Joi from "joi";
+import { validateEmailDomain } from "@/utils/lib";
 
-import { z } from 'zod';
-
-export const authSchema = z.object({
-    email: z.string().email(),
-    password: z.string()
+export const authSchema = Joi.object({
+    email: Joi.string().email().custom(validateEmailDomain),
+    password: Joi.string()
 });
 
-export const emailSchema = z.object({
-    email: z.string().email().refine((value) => value.split('@')[1].indexOf('russelsmithgroup.com') !== -1, {
-        message: 'Domain must be a russelsmith domain!'
-    }),
+export const emailSchema = Joi.object({
+    email: Joi.string().email().custom(validateEmailDomain),
 });
 
-export type Auth = z.infer<typeof authSchema>;
+export interface Auth {
+    email: string;
+    password: string;
+}
 
 

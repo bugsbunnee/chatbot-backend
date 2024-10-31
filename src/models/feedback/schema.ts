@@ -1,8 +1,11 @@
-import { z } from "zod";
+import Joi from "joi";
 
-export const feedbackZodSchema = z.object({
-    subject: z.string().min(3, 'Subject must be at least 3 characters'),
-    message: z.string().min(10, 'Message must be at least 10 characters')
+export const feedbackJoiSchema = Joi.object({
+    subject: Joi.string().min(3).required().label("Subject"),
+    message: Joi.string().min(10).required().label("Message")
 });
 
-export type IFeedback = z.infer<typeof feedbackZodSchema>;
+export interface IFeedback {
+    subject: string;
+    message: string;
+}

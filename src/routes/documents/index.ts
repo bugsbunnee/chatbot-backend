@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import _ from 'lodash';
-import pdfParse from 'pdf-parse';
 
 import admin from '../../middleware/admin';
 import auth from '../../middleware/auth';
@@ -13,17 +12,16 @@ import { Document } from '../../models/document';
 
 const router = express.Router();
 
-router.post('/upload', [auth, admin, validateWith(newDocumentSchema)], async (req: Request, res: Response): Promise<any> => {
-    const response = await axios.get(req.body.url, { responseType:'arraybuffer'});
-    const data = await pdfParse(response.data);
-
+router.post('/upload', [auth, admin, validateWith(newDocumentSchema)], async (req: Request, res: Response): Promise<any> => {    
     const versionNumber = 1;
+    
     const document = new Document({
         name: req.body.name,
         tags: req.body.tags,
         documentNumber: req.body.documentNumber,
         lastInsertedVersion: versionNumber,
-        history: { content: data.text, version: versionNumber, url: req.body.url },
+        isAnalyzed: false,
+        history: [{ version: versionNumber, url: req.body.url, type: req.body.type }],
         enquiries: [],
     });
 
@@ -51,14 +49,13 @@ router.get('/dashboard', [auth, admin], async (req: Request, res: Response) => {
 });
 
 router.put('/:id', [auth, admin, validateObjectId, validateWith(updateDocumentSchema)], async (req: Request, res: Response): Promise<any> => {
-    const response = await axios.get(req.body.url, { responseType:'arraybuffer'});
-    const data = await pdfParse(response.data);
-
     const document = await Document.findByIdAndUpdate(req.params.id);
     if (!document) return res.status(404).json({ message: 'The document with the given ID does not exist' });
 
     document.lastInsertedVersion += 1;
-    document.history.push({ version: document.lastInsertedVersion, content: data.text, url: req.body.url });
+    document.isAnalyzed = false;
+    document.history.push({ version: document.lastInsertedVersion, url: req.body.url, type: req.body.type });
+    
     await document.save();
 
     res.json(document);
@@ -74,7 +71,7 @@ router.get('/:id', [auth, admin, validateObjectId], async (req: Request, res: Re
 router.get('/', [auth, admin], async (req: Request, res: Response): Promise<any> => {
     const documents = await Document
                                 .find()
-                                .select('_id name createdAt tags documentNumber lastInsertedVersion')
+                                .select('_id name isAnalyzed createdAt tags documentNumber lastInsertedVersion')
                                 .sort({ createdAt: 1 });
 
     res.json(documents);

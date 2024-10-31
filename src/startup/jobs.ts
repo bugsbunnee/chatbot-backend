@@ -1,7 +1,7 @@
-import { publishPendingPostsJob } from "../utils/schedule";
+import { updateAndPollDocuments } from "../utils/schedule";
 
 function registerSchedules() {
-    publishPendingPostsJob();
+    updateAndPollDocuments();
 }
 
 export default registerSchedules;

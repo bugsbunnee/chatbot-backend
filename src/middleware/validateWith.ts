@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import _ from "lodash";
-import { z } from "zod";
 
-function validateWith(schema: z.ZodObject<z.ZodRawShape>) {
+import Joi from "joi";
+import _ from "lodash";
+
+function validateWith(schema:Joi.ObjectSchema) {
     return function (req: Request, res: Response, next: NextFunction): any {
-        const validation = schema.safeParse(req.body);
-        if (!validation.success) return res.status(400).json(_.omit(validation.error.format(), ['_errors']));
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
 
         next();
     }

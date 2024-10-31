@@ -5,7 +5,7 @@ import { Options, rateLimit } from 'express-rate-limit';
 import { getChatMessageList, getLastChatMetadata, sendChatMessage, startConversation } from '../../utils/openai';
 
 import { Chat } from '../../models/chat';
-import { messageZodSchema } from '../../models/chat/schema';
+import { messageJoiSchema } from '../../models/chat/schema';
 
 import auth from '../../middleware/auth';
 import validateWith from '../../middleware/validateWith';
@@ -18,13 +18,14 @@ router.post('/initialize', [auth, rateLimit(limitOptions), initializeChat], asyn
     res.json(_.pick(req.chat, ['_id']));
 });
 
-router.post('/ask', [auth, validateWith(messageZodSchema), initializeChat], async (req: Request, res: Response): Promise<any> =>  {
+router.post('/ask', [auth, validateWith(messageJoiSchema), initializeChat], async (req: Request, res: Response): Promise<any> =>  {
     if (!req.chat) return res.status(404).json({ message: 'No chat found for the given user!' });
 
     const options = {
         threadId: req.chat.threadId,
         assistantId: req.chat.assistantId,
         message: req.body.message,
+        vectorId: req.chat.vectorId,
     };
 
     const message = await sendChatMessage(options);
