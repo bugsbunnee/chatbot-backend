@@ -25,7 +25,6 @@ router.post('/ask', [auth, validateWith(messageJoiSchema), initializeChat], asyn
         threadId: req.chat.threadId,
         assistantId: req.chat.assistantId,
         message: req.body.message,
-        vectorId: req.chat.vectorId,
     };
 
     const message = await sendChatMessage(options);

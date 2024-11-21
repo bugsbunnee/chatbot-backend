@@ -1,4 +1,7 @@
-export const MAX_CONTENT_LENGTH = 236000;
+export enum FileType {
+    PDF = 'pdf',
+    TXT = 'txt'
+}
 
 export const ROLES = {
     ADMIN: 'admin',
@@ -11,5 +14,11 @@ export const PLATFORM_LIMITS = {
     facebook: { charLimit: 63206, imageAspect: '1.91:1' }
 };
 
-export const app_roles = Object.values(ROLES);
-export const platforms = Object.keys(PLATFORM_LIMITS);
+export const FILE_TYPES = [
+    FileType.PDF,
+    FileType.TXT
+];
+
+export const MAX_CONTENT_LENGTH = 236000;
+export const APP_ROLES = Object.values(ROLES);
+export const PLATFORMS = Object.keys(PLATFORM_LIMITS);

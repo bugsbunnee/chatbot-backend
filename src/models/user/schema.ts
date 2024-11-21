@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { ROLES } from "../../utils/constants";
+import { validateEmailDomain } from "../../utils/lib";
 import { Types } from "mongoose";
-import { validateEmailDomain } from "@/utils/lib";
 
 export const userJoiSchema = Joi.object({
     role: Joi.string().valid(ROLES.ADMIN, ROLES.EDITOR),

@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import axios from 'axios';
 import _ from 'lodash';
 
 import admin from '../../middleware/admin';
@@ -40,16 +39,33 @@ router.get('/dashboard', [auth, admin], async (req: Request, res: Response) => {
         { $limit: 5 } // Top 5 tags
     ]);
 
-    const [totalDocuments, topTags] = await Promise.all([totalDocumentsPromise, topTagsPromise]);
+    const analysedDocumentsPromise = Document.aggregate([
+        { $match: { isAnalyzed: true }}, 
+        { $count: "totalCount" }, 
+    ]);
+    
+    const notAnalysedDocumentsPromise = Document.aggregate([
+        { $match: { isAnalyzed: false }}, 
+        { $count: "totalCount" }, 
+    ]);
+
+    const [totalDocuments, topTags, analysedDocuments, notAnalysedDocuments] = await Promise.all([
+        totalDocumentsPromise, 
+        topTagsPromise, 
+        analysedDocumentsPromise,
+        notAnalysedDocumentsPromise
+    ]);
  
     res.json({
         totalDocuments,
-        topTags
+        topTags,
+        analysedDocuments: analysedDocuments.length > 0 ? analysedDocuments[0].totalCount : 0,
+        notAnalysedDocuments: notAnalysedDocuments.length > 0 ? notAnalysedDocuments[0].totalCount : 0
     });
 });
 
 router.put('/:id', [auth, admin, validateObjectId, validateWith(updateDocumentSchema)], async (req: Request, res: Response): Promise<any> => {
-    const document = await Document.findByIdAndUpdate(req.params.id);
+    const document = await Document.findById(req.params.id);
     if (!document) return res.status(404).json({ message: 'The document with the given ID does not exist' });
 
     document.lastInsertedVersion += 1;

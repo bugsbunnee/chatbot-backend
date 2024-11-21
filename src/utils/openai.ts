@@ -6,7 +6,6 @@ import fs from 'fs';
 import { Uploadable } from 'openai/uploads';
 
 interface ConversationData { 
-    vectorId: string | null;
     assistantId: string; 
     threadId: string;
     message: string; 
@@ -32,7 +31,7 @@ export const generatePrompt = () => {
     `;
 };
 
-export const startConversation = async (): Promise<Omit<ConversationData, 'message' | 'vectorId'> | null> => {
+export const startConversation = async (): Promise<Omit<ConversationData, 'message'> | null> => {
     try {
         const assistant = await client.beta.assistants.create({ 
             name: 'RusselSmith Chat Assistant',
@@ -58,7 +57,6 @@ export const uploadFilesAndPoll = async (vectorName: string, fileStreams: Upload
 
     try {
         await client.beta.vectorStores.fileBatches.uploadAndPoll(vectorStore.id, { files: fileStreams });
-        console.log('completed')
     } catch (error) {
         logger.error(error);
     }
@@ -76,12 +74,6 @@ export const deleteFiles = async () => {
 
 export const sendChatMessage = async (conversation: ConversationData): Promise<MessageData | null> => {
     try {
-        if (conversation.vectorId) {
-            await client.beta.assistants.update(conversation.assistantId, {
-                tool_resources: { file_search: { vector_store_ids: [conversation.vectorId] } },
-            });
-        }
-
         const message = await client.beta.threads.messages.create(conversation.threadId, {
             role: 'user',
             content: conversation.message
@@ -98,6 +90,12 @@ export const sendChatMessage = async (conversation: ConversationData): Promise<M
         
         return null;
     }
+};
+
+export const updateChatAssistantWithVector = (vectorId: string, assistantId: string) => {
+    return client.beta.assistants.update(assistantId, {
+        tool_resources: { file_search: { vector_store_ids: [vectorId] } },
+    });
 };
 
 export const getChatMessageList = async (chat: { threadId: string; runId: string; }): Promise<MessageListResponse> => {

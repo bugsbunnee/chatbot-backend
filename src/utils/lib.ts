@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { Request } from "express";
+import { FileType } from "./constants";
 
 
 export const calculatePaginationData = async (req: Request, total: number) => {
@@ -43,3 +44,15 @@ export const validateEmailDomain = (value: string, helpers: Joi.CustomHelpers<an
 
     return helpers.message({ custom: 'Email must be of russelsmith domain!' })
 };
+
+export const getFileMimeType = (fileType: FileType) => {
+    if (fileType === FileType.PDF) {
+        return 'application/pdf';
+    }
+
+    if (fileType === FileType.TXT) {
+        return 'text/plain';
+    }
+
+    return 'application/pdf';
+}

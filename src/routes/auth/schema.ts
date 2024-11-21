@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { validateEmailDomain } from "@/utils/lib";
+import { validateEmailDomain } from "../../utils/lib";
 
 export const authSchema = Joi.object({
     email: Joi.string().email().custom(validateEmailDomain),

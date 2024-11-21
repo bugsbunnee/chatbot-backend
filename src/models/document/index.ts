@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { IDocument, IDocumentHistory, IDocumentMethods } from "./schema";
+import { FILE_TYPES } from "../../utils/constants";
 
 type DocumentModel = mongoose.Model<IDocument, {}, IDocumentMethods>;
 
 const HistorySchema = new mongoose.Schema<IDocumentHistory>({
-    type: { type: String, enum: ['pdf'], required: true },
+    type: { type: String, enum: FILE_TYPES, required: true },
     version: { type: Number, min: 1, required: true }, 
     url: { type: String }
 });

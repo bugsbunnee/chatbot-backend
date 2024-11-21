@@ -1,5 +1,7 @@
+import { FileType } from "../../utils/constants";
+
 export interface IDocumentHistory { 
-    type: 'pdf';
+    type: FileType;
     version: number; 
     url: string;
 }

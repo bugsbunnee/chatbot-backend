@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 export const newDocumentSchema = Joi.object({
     url: Joi.string().uri(),
-    type: Joi.string().valid('pdf'),
+    type: Joi.string().valid('txt', 'pdf'),
     documentNumber: Joi.string().min(3).required(),
     name: Joi.string().min(3),
     tags: Joi.array().items(Joi.string().min(1)).min(1).required()
@@ -11,7 +11,7 @@ export const newDocumentSchema = Joi.object({
 
 export const updateDocumentSchema = Joi.object({
     url: Joi.string().uri(),
-    type: Joi.string().valid('pdf'),
+    type: Joi.string().valid('txt', 'pdf'),
 });
 
 export const documentQuestionSchema = Joi.object({
