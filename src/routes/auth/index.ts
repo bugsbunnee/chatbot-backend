@@ -7,6 +7,7 @@ import validateWith from '../../middleware/validateWith';
 import { authSchema, emailSchema } from './schema';
 import { User } from '../../models/user';
 import { userJoiSchema } from '../../models/user/schema';
+import { Role } from '../../utils/constants';
 
 const router = express.Router();
 
@@ -28,6 +29,17 @@ router.post('/login', validateWith(authSchema), async (req: Request, res: Respon
     res.send({ token });
 });
 
+router.post('/login/admin', validateWith(authSchema), async (req: Request, res: Response): Promise<any> => {
+    const user = await User.findOne({ email: req.body.email, role: Role.ADMIN });
+    if (!user) return res.status(404).send({ message: 'User not found' });
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) return res.status(400).send({ message: 'Invalid credentials!' });
+
+    const token = user.generateAuthToken();
+    res.send({ token });
+});
+
 router.post('/register', validateWith(userJoiSchema), async (req: Request, res: Response): Promise<any> => {
     let user = await User.findOne({ email: req.body.email });
     if (user) return res.status(400).send({ message: 'User already exists' });
@@ -37,12 +49,12 @@ router.post('/register', validateWith(userJoiSchema), async (req: Request, res: 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
-    await user.save()
+    await user.save();
 
     res
-    .header('x-auth-token', user.generateAuthToken())
-    .header('access-control-expose-headers', 'x-auth-token')
-    .status(201).send(_.omit(user, ['password']));
+        .header('x-auth-token', user.generateAuthToken())
+        .header('access-control-expose-headers', 'x-auth-token')
+        .status(201).send(_.omit(user, ['password']));
 });
 
 export default router;

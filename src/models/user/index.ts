@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import _ from "lodash";
 
 import { IUser, IUserMethods, IUserVirtuals } from "./schema";
-import { APP_ROLES } from "../../utils/constants";
+import { APP_ROLES, Role } from "../../utils/constants";
 
 type UserModel = mongoose.Model<IUser, {}, IUserMethods, IUserVirtuals>;
 
@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods, IUserVirt
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: APP_ROLES, default: 'editor' }
+    role: { type: String, enum: APP_ROLES, default: Role.USER }
 });
 
 UserSchema.method('generateAuthToken', function () {

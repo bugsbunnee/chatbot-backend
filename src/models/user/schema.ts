@@ -1,10 +1,10 @@
 import Joi from "joi";
-import { ROLES } from "../../utils/constants";
+import { Role } from "../../utils/constants";
 import { validateEmailDomain } from "../../utils/lib";
 import { Types } from "mongoose";
 
 export const userJoiSchema = Joi.object({
-    role: Joi.string().valid(ROLES.ADMIN, ROLES.EDITOR),
+    role: Joi.string().valid(Role.ADMIN, Role.USER),
     firstName: Joi.string().min(3).required().label("First Name"),
     lastName: Joi.string().min(3).required().label("Last Name"),
     email: Joi.string().email().custom(validateEmailDomain),
@@ -16,7 +16,7 @@ export const userJoiSchema = Joi.object({
 });
 
 export interface IUser {
-    role: string;
+    role: Role;
     firstName: string;
     lastName: string;
     email: string;

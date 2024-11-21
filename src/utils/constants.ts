@@ -3,9 +3,9 @@ export enum FileType {
     TXT = 'txt'
 }
 
-export const ROLES = {
-    ADMIN: 'admin',
-    EDITOR: 'editor'
+export enum Role {
+    ADMIN = 'admin',
+    USER = 'user'
 };
 
 export const PLATFORM_LIMITS = {
@@ -19,6 +19,10 @@ export const FILE_TYPES = [
     FileType.TXT
 ];
 
+export const APP_ROLES = [
+    Role.ADMIN,
+    Role.USER
+];
+
 export const MAX_CONTENT_LENGTH = 236000;
-export const APP_ROLES = Object.values(ROLES);
 export const PLATFORMS = Object.keys(PLATFORM_LIMITS);

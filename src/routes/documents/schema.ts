@@ -1,5 +1,6 @@
 
 import Joi from 'joi';
+import { FileType } from '../../utils/constants';
 
 export const newDocumentSchema = Joi.object({
     url: Joi.string().uri(),
@@ -11,7 +12,7 @@ export const newDocumentSchema = Joi.object({
 
 export const updateDocumentSchema = Joi.object({
     url: Joi.string().uri(),
-    type: Joi.string().valid('txt', 'pdf'),
+    type: Joi.string().valid(FileType.TXT, FileType.PDF),
 });
 
 export const documentQuestionSchema = Joi.object({
